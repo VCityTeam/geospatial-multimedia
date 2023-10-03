@@ -1,0 +1,25 @@
+body {
+    overflow: hidden;
+}
+
+.full_screen {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.multimedia {
+    position: absolute;
+    background-color: white;
+    top: 0;
+    left: 0;
+    width: 20%;
+    height: auto;
+}
+ .multimedia img{
+    width: 100%;
+    height: 100%;
+ }

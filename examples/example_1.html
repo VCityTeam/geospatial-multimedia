@@ -5,7 +5,7 @@
   <title>Example 1</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./css/example.css" />
+  <link rel="stylesheet" href="./assets/css/example.css" />
 </head>
 
 <body>
@@ -21,12 +21,58 @@
       1837816.94334, 1847692.32501,
       5170036.4587, 5178412.82698);
 
-    // create a itowns planar view
     const viewDomElement = document.createElement('div');
     viewDomElement.classList.add('full_screen');
     document.body.appendChild(viewDomElement);
 
-    // Instanciate PlanarView*
+    // Integrate multimedia
+    const multimediaIntegrationDomElement = document.createElement('div');
+    multimediaIntegrationDomElement.classList.add('multimedia');
+
+    const titleDomElement = document.createElement('h3');
+    titleDomElement.textContent = 'Integrate multimedia';
+    multimediaIntegrationDomElement.appendChild(titleDomElement);
+
+
+    const imgMultimedia = document.createElement('img');
+    imgMultimedia.src = '';
+    multimediaIntegrationDomElement.appendChild(imgMultimedia);
+
+    //Buttons
+    const buttonPosition = document.createElement('button');
+    buttonPosition.textContent = 'Set Position';
+    multimediaIntegrationDomElement.appendChild(buttonPosition);
+
+    const buttonChooseFile = document.createElement('input');
+    buttonChooseFile.type = 'file';
+    multimediaIntegrationDomElement.appendChild(buttonChooseFile);
+    buttonChooseFile.addEventListener('change', (evt) => {
+      // console.log(buttonChooseFile.files[0].stream());
+      let tgt = evt.target || window.event.srcElement,
+        files = tgt.files;
+
+      // FileReader support
+      if (FileReader && files && files.length) {
+        let fr = new FileReader();
+        fr.onload = function () {
+          imgMultimedia.src = fr.result;
+        }
+        fr.readAsDataURL(files[0]);
+      }
+
+      // Not supported
+      else {
+        // si pas supporté
+      }
+    });
+
+    const buttonAddMultimedia = document.createElement('button');
+    buttonAddMultimedia.textContent = 'Add Multimedia';
+    multimediaIntegrationDomElement.appendChild(buttonAddMultimedia);
+
+    document.body.appendChild(multimediaIntegrationDomElement);
+
+    // Instanciate PlanarView
     let cameraCoord = new itowns.Coordinates('EPSG:3946', 1841980,
       5175682, 3000)
     let view = new itowns.PlanarView(viewDomElement, extent, {
