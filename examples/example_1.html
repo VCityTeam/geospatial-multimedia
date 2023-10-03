@@ -38,8 +38,8 @@
     // Add a WMS imagery source
     let wmsImagerySource = new itowns.WMSSource({
       extent: extent,
-      name: 'ortho_latest',
-      url: 'https://imagerie.data.grandlyon.com/wms/grandlyon',
+      name: 'GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2',
+      url: 'https://wxs.ign.fr/choisirgeoportail/geoportail/r/wms',
       version: '1.3.0',
       crs: 'EPSG:3946',
       format: 'image/jpeg',
@@ -88,6 +88,8 @@
         url: 'https://dataset-dl.liris.cnrs.fr/three-d-tiles-lyon-metropolis/2015/Lyon-1_2015/tileset.json'
       }),
     }, view);
+
+    itowns.View.prototype.addLayer.call(view, $3dTilesLayer);
 
     // Lights
     let dirLight = new itowns.THREE.DirectionalLight(0xffffff, 1);
