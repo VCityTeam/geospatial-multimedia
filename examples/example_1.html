@@ -122,16 +122,52 @@
     buttonPosition.textContent = 'Set Position';
     multimediaIntegrationDomElement.appendChild(buttonPosition);
 
+    const buttonChooseFile = document.createElement('input');
+    buttonChooseFile.type = 'file';
+    multimediaIntegrationDomElement.appendChild(buttonChooseFile);
+    buttonChooseFile.addEventListener('change', (evt) => {
+      let tgt = evt.target || window.event.srcElement,
+        files = tgt.files;
+
+      // FileReader support
+      if (FileReader && files && files.length) {
+        let fr = new FileReader();
+        fr.onload = function () {
+          imgMultimedia.src = fr.result;
+        }
+        fr.readAsDataURL(files[0]);
+      }
+      else {
+        // si pas supporté
+      }
+    });
 
     let bPlaceCube = false;
-    let cube;
+    let sprite;
+    let line;
 
     buttonPosition.onclick = () => {
       console.log('click');
-      const geometry = new itowns.THREE.BoxGeometry(5, 5, 5);
-      const material = new itowns.THREE.MeshBasicMaterial({ color: new itowns.THREE.Color(Math.random(), Math.random(), Math.random()) });
-      cube = new itowns.THREE.Mesh(geometry, material);
-      view.scene.add(cube);
+
+      const map = new itowns.THREE.TextureLoader().load(imgMultimedia.src);
+      const material = new itowns.THREE.SpriteMaterial({ map: map, color: 'white'});
+
+      sprite = new itowns.THREE.Sprite(material);
+      sprite.scale.set(20, 20, 20);
+      view.scene.add(sprite);
+
+      const materialLine = new itowns.THREE.LineBasicMaterial({
+        color: 0x0000ff
+      });
+
+      const points = [];
+      points.push(new itowns.THREE.Vector3(0, 0, 50));
+      points.push(new itowns.THREE.Vector3(0, 0, 0));
+
+      const geometry = new itowns.THREE.BufferGeometry().setFromPoints(points);
+
+      line = new itowns.THREE.Line(geometry, materialLine);
+      view.scene.add(line);
 
       let raycaster = new itowns.THREE.Raycaster();
 
@@ -154,8 +190,10 @@
           const i = raycaster.intersectObjects(objectsLayers);
           if (i.length) {
             i[0].point
-            cube.position.set(i[0].point.x, i[0].point.y, i[0].point.z);
-            cube.updateMatrixWorld();
+            sprite.position.set(i[0].point.x, i[0].point.y, i[0].point.z + 50);
+            line.position.set(i[0].point.x, i[0].point.y, i[0].point.z);
+            line.updateMatrixWorld();
+            sprite.updateMatrixWorld();
             view.notifyChange();
           }
         }
@@ -174,29 +212,6 @@
         // view.scene.add(control);
       });
     }
-
-
-
-
-    const buttonChooseFile = document.createElement('input');
-    buttonChooseFile.type = 'file';
-    multimediaIntegrationDomElement.appendChild(buttonChooseFile);
-    buttonChooseFile.addEventListener('change', (evt) => {
-      let tgt = evt.target || window.event.srcElement,
-        files = tgt.files;
-
-      // FileReader support
-      if (FileReader && files && files.length) {
-        let fr = new FileReader();
-        fr.onload = function () {
-          imgMultimedia.src = fr.result;
-        }
-        fr.readAsDataURL(files[0]);
-      }
-      else {
-        // si pas supporté
-      }
-    });
 
     const buttonAddMultimedia = document.createElement('button');
     buttonAddMultimedia.textContent = 'Add Multimedia';
