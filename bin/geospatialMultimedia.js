@@ -9,9 +9,8 @@ app.use(cors({origin:'http://localhost:8000', credentials: true}));
 
 app.use(json());
 
-app.post('/test'+'/:uuid', (req, res)=>{
-    console.log('Bonjour test', req.body);
-    console.log('Bonjour uuid', req.params.uuid);
+app.post('/test', (req, res)=>{
+    console.log('Bonjour response', req.body);
 
     // ici on stock l'image dans le SQLITE
     res.send({title:'SCHLAAACK', position:'400'});

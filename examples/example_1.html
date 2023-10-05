@@ -11,7 +11,10 @@
 <body>
   <script src="../dist/RUN_MODE/bundle.js"></script>
   <script src="../node_modules/itowns/dist/itowns.js"></script>
-  <script type="text/javascript" >
+  <script type="module">
+
+    import { TransformControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/TransformControls.js';
+
     // Define crs projection that we will use (taken from https://epsg.io/3946, Proj4js section)
     itowns.proj4.defs('EPSG:3946', '+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
 
@@ -119,13 +122,15 @@
     buttonPosition.textContent = 'Set Position';
     multimediaIntegrationDomElement.appendChild(buttonPosition);
 
-    
+
     let bPlaceCube = false;
-    
+    let cube;
+
     buttonPosition.onclick = () => {
+      console.log('click');
       const geometry = new itowns.THREE.BoxGeometry(5, 5, 5);
-      const material = new itowns.THREE.MeshBasicMaterial({ color: new itowns.THREE.Color(Math.random(), Math.random(), Math.random())});
-      const cube = new itowns.THREE.Mesh(geometry, material);
+      const material = new itowns.THREE.MeshBasicMaterial({ color: new itowns.THREE.Color(Math.random(), Math.random(), Math.random()) });
+      cube = new itowns.THREE.Mesh(geometry, material);
       view.scene.add(cube);
 
       let raycaster = new itowns.THREE.Raycaster();
@@ -152,22 +157,24 @@
             cube.position.set(i[0].point.x, i[0].point.y, i[0].point.z);
             cube.updateMatrixWorld();
             view.notifyChange();
-            console.log(i[0], cube.position.z);
           }
-          // cube.position.set(pos.x, pos.y, 300);
-          // cube.updateMatrixWorld();
-          // view.notifyChange();
-          // console.log(cube);
         }
       });
-      // itowns.THREE.
+      viewDomElement.addEventListener('mousedown', (event) => {
+        bPlaceCube = false;
+        //Not working for the moment, didnt display guizmos
+        // let control = new TransformControls(view.camera.camera3D, view.mainLoop.gfxEngine.label2dRenderer.domElement);
+        // control.attach(cube);
+        // control.updateMatrixWorld();
+        // view.notifyChange();
 
+        // console.log(cube);
+        // console.log(control);
+
+        // view.scene.add(control);
+      });
     }
 
-    viewDomElement.addEventListener('mousedown', (event) => {
-      // console.log('finito');
-      bPlaceCube = false;
-    });
 
 
 
@@ -195,6 +202,12 @@
     buttonAddMultimedia.textContent = 'Add Multimedia';
     multimediaIntegrationDomElement.appendChild(buttonAddMultimedia);
 
+    buttonAddMultimedia.onclick = () => {
+      fetch('http://localhost:8001/test/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ img: imgMultimedia.src, position: '500' }) }).then(response => response.json()).then((data) => {
+        alert(data);
+      })
+
+    }
     document.body.appendChild(multimediaIntegrationDomElement);
   </script>
 </body>
